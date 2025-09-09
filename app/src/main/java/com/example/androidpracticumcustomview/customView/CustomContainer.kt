@@ -1,4 +1,4 @@
-package com.example.androidpracticumcustomview.ui.theme
+package com.example.androidpracticumcustomview.customView
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,7 +15,7 @@ import android.widget.FrameLayout
  */
 
 class CustomContainer @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
+    context: Context, attrs: AttributeSet? = null,
 ) : FrameLayout(context, attrs) {
 
     init {

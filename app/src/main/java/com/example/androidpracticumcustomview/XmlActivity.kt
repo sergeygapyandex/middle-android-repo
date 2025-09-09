@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import com.example.androidpracticumcustomview.ui.theme.CustomContainer
+import com.example.androidpracticumcustomview.customView.CustomContainer
 
 
 class XmlActivity : ComponentActivity() {
