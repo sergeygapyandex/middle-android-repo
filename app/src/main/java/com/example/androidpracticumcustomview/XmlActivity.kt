@@ -34,6 +34,11 @@ class XmlActivity : ComponentActivity() {
         // Добавление второго элемента через некоторое время (например, по задержке)
         Handler(Looper.getMainLooper()).postDelayed({
             customContainer.addView(secondView)
-        }, 2000)
+        }, DELAY_MILLIS)
+    }
+
+
+    private companion object {
+        const val DELAY_MILLIS = 2000L
     }
 }

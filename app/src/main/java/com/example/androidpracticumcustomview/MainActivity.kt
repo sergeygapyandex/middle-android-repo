@@ -9,12 +9,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val buttonXml = findViewById<Button>(R.id.xmlActivity)
-        val buttonCompose = findViewById<Button>(R.id.composeActivity)
-        buttonXml.setOnClickListener {
+        findViewById<Button>(R.id.xmlActivity).setOnClickListener {
             startActivity(Intent(this, XmlActivity::class.java))
         }
-        buttonCompose.setOnClickListener {
+        findViewById<Button>(R.id.composeActivity).setOnClickListener {
             startActivity(Intent(this, ComposeScreen::class.java))
         }
     }
