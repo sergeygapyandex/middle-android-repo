@@ -3,6 +3,7 @@ package com.example.androidpracticumcustomview.customView
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.example.androidpracticumcustomview.R
 import androidx.core.view.isEmpty
@@ -10,13 +11,17 @@ import androidx.core.view.isEmpty
 /*
 Задание:
 Предусмотрите обработку ошибок рендера дочерних элементов.
-Задание по желанию:
-Предусмотрите параметризацию длительности анимации.
  */
 
 class CustomContainer @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
+    context: Context,
+    attrs: AttributeSet? = null,
+    val alphaAnimationDuration: Long = 2000L,
+    val translationAnimationDuration: Long = 5000L,
 ) : FrameLayout(context, attrs) {
+
+    private val gap by lazy { (MIDDLE_GAP * resources.displayMetrics.density).toInt() }
+    private val interpolator = DecelerateInterpolator()
 
     init {
         setWillNotDraw(false)
@@ -39,15 +44,11 @@ class CustomContainer @JvmOverloads constructor(
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         if (isEmpty()) return
         val centerY = (bottom - top) / 2
-        val gap = (MIDDLE_GAP * resources.displayMetrics.density).toInt()
 
         getChildAt(0).apply {
             val childLeft = (right - left - this.measuredWidth) / 2
             layout(
-                childLeft,
-                centerY - gap / 2 - this.measuredHeight,
-                childLeft + this.measuredWidth,
-                centerY - gap / 2
+                childLeft, centerY - gap / 2 - this.measuredHeight, childLeft + this.measuredWidth, centerY - gap / 2
             )
         }
 
@@ -55,10 +56,7 @@ class CustomContainer @JvmOverloads constructor(
         getChildAt(1).apply {
             val childLeft = (right - left - this.measuredWidth) / 2
             layout(
-                childLeft,
-                centerY + gap / 2,
-                childLeft + this.measuredWidth,
-                centerY + gap / 2 + this.measuredHeight
+                childLeft, centerY + gap / 2, childLeft + this.measuredWidth, centerY + gap / 2 + this.measuredHeight
             )
         }
     }
@@ -69,6 +67,35 @@ class CustomContainer @JvmOverloads constructor(
      */
     override fun addView(child: View) {
         if (childCount >= 2) throw IllegalStateException(resources.getString(R.string.ill_ex)) else super.addView(child)
+        child.alpha = 0f
+        child.post {
+            val alphaAnimation = child.animate()
+                .alpha(1f)
+                .setDuration(alphaAnimationDuration)
+                .setInterpolator(interpolator)
+
+
+            val translationYAnimation = when (indexOfChild(child) == 0) {
+                true -> {
+                    val currentTop = child.top
+                    val targetTranslationY = -currentTop.toFloat()
+                    child.animate()
+                        .translationY(targetTranslationY)
+                        .setDuration(translationAnimationDuration)
+                        .setInterpolator(interpolator)
+                }
+
+                false -> {
+                    val targetTranslationY = (height - child.bottom).toFloat()
+                    child.animate()
+                        .translationY(targetTranslationY)
+                        .setDuration(translationAnimationDuration)
+                        .setInterpolator(interpolator)
+                }
+            }
+            alphaAnimation.start()
+            translationYAnimation.start()
+        }
     }
 
     private companion object {
