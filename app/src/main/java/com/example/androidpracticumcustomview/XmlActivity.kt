@@ -1,5 +1,7 @@
 package com.example.androidpracticumcustomview
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
@@ -14,17 +16,23 @@ import kotlinx.coroutines.launch
 class XmlActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startXmlPracticum()
+        val isOneChildView = intent.getBooleanExtra(EXTRA_CHILD_VIEW_STATE, true)
+        startXmlPracticum(isOneChildView)
     }
 
-    private fun startXmlPracticum() {
+    private fun startXmlPracticum(isOneChildView: Boolean) {
         val customContainer = CustomContainer(this)
         setContentView(customContainer)
         customContainer.setOnClickListener { finish() }
-        customContainer.addView(TextView(this).apply { custom() })
-        lifecycleScope.launch {
-            delay(DELAY_MILLIS)
-            customContainer.addView(TextView(this@XmlActivity).apply { custom(false) })
+        when (isOneChildView) {
+            true -> customContainer.addView(TextView(this).apply { custom() })
+            false -> {
+                customContainer.addView(TextView(this).apply { custom() })
+                lifecycleScope.launch {
+                    delay(DELAY_MILLIS)
+                    customContainer.addView(TextView(this@XmlActivity).apply { custom(false) })
+                }
+            }
         }
     }
 
@@ -45,9 +53,15 @@ class XmlActivity : ComponentActivity() {
         setTextColor(Color.WHITE)
     }
 
-    private companion object {
-        const val DELAY_MILLIS = 2000L
-        const val TEXT_SIZE = 22f
-        const val PADDING = 16
+    companion object {
+        private const val DELAY_MILLIS = 2000L
+        private const val TEXT_SIZE = 22f
+        private const val PADDING = 16
+        private const val EXTRA_CHILD_VIEW_STATE = "EXTRA_CHILD_VIEW_STATE"
+
+        fun newIntent(context: Context, isOneChildView: Boolean = true) =
+            Intent(context, XmlActivity::class.java).apply {
+                putExtra(EXTRA_CHILD_VIEW_STATE, isOneChildView)
+            }
     }
 }
