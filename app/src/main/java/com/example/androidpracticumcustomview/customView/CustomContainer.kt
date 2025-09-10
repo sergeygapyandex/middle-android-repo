@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.example.androidpracticumcustomview.R
+import androidx.core.view.isEmpty
 
 /*
 Задание:
-Реализуйте необходимые компоненты;
-Создайте проверку что дочерних элементов не более 2-х;
 Предусмотрите обработку ошибок рендера дочерних элементов.
 Задание по желанию:
 Предусмотрите параметризацию длительности анимации.
@@ -23,18 +23,55 @@ class CustomContainer @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        // TODO
-        // ...
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+        val childWidthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST)
+        val childHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST)
+
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            child.measure(childWidthSpec, childHeightSpec)
+        }
+
+        setMeasuredDimension(width, height)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        // TODO
-        // ...
+        if (isEmpty()) return
+        val centerY = (bottom - top) / 2
+        val gap = (MIDDLE_GAP * resources.displayMetrics.density).toInt()
+
+        getChildAt(0).apply {
+            val childLeft = (right - left - this.measuredWidth) / 2
+            layout(
+                childLeft,
+                centerY - gap / 2 - this.measuredHeight,
+                childLeft + this.measuredWidth,
+                centerY - gap / 2
+            )
+        }
+
+        if (childCount < 2) return
+        getChildAt(1).apply {
+            val childLeft = (right - left - this.measuredWidth) / 2
+            layout(
+                childLeft,
+                centerY + gap / 2,
+                childLeft + this.measuredWidth,
+                centerY + gap / 2 + this.measuredHeight
+            )
+        }
     }
 
+    /**
+     * Добавляет дочерний view. Максимум 2 дочерних view
+     * @throws IllegalStateException если больше 2 view
+     */
     override fun addView(child: View) {
-        // TODO
-        // ...
+        if (childCount >= 2) throw IllegalStateException(resources.getString(R.string.ill_ex)) else super.addView(child)
+    }
+
+    private companion object {
+        const val MIDDLE_GAP = 10
     }
 }

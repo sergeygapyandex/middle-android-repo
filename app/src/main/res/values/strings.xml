@@ -2,4 +2,7 @@
     <string name="app_name">android practicum custom view</string>
     <string name="xml_screen">XML View</string>
     <string name="compose_screen">Compose</string>
+    <string name="ill_ex">Добавлено больше двух дочерних View</string>
+    <string name="text_for_top_tv">TopTV</string>
+    <string name="text_for_bottom_tv">BottomTV</string>
 </resources>
