@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -39,8 +41,8 @@ fun CustomContainerCompose(
     val firstTranslateYPx = remember { Animatable(0f) }
     val secondTranslateYPx = remember { Animatable(0f) }
 
-    val firstStarted = remember { mutableStateOf(false) }
-    val secondStarted = remember { mutableStateOf(false) }
+    var firstStarted by remember { mutableStateOf(false) }
+    var secondStarted by remember { mutableStateOf(false) }
 
     val bothChildrenPresent = firstChild != null && secondChild != null
     val halfGap = if (bothChildrenPresent) gapPx / 2f else 0f
@@ -69,8 +71,8 @@ fun CustomContainerCompose(
                     delay(CustomContainerConstants.SIZE_CHECK_DELAY_MS)
                 }
 
-                if (!firstStarted.value) {
-                    firstStarted.value = true
+                if (!firstStarted) {
+                    firstStarted = true
 
                     val parentH = parentHeightPx.floatValue
                     val h = firstHeightPx.floatValue
@@ -105,8 +107,8 @@ fun CustomContainerCompose(
                     delay(CustomContainerConstants.SIZE_CHECK_DELAY_MS)
                 }
 
-                if (!secondStarted.value) {
-                    secondStarted.value = true
+                if (!secondStarted) {
+                    secondStarted = true
 
                     val parentH = parentHeightPx.floatValue
                     val h = secondHeightPx.floatValue

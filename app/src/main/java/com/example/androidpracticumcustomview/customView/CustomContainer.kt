@@ -107,23 +107,19 @@ class CustomContainer @JvmOverloads constructor(
             .setInterpolator(interpolator)
 
 
-        val translationYAnimation = when (indexOfChild(child) == 0) {
-            true -> {
-                val currentTop = child.top
-                val targetTranslationY = -currentTop.toFloat()
-                child.animate()
-                    .translationY(targetTranslationY)
-                    .setDuration(translationAnimationDuration)
-                    .setInterpolator(interpolator)
-            }
-
-            false -> {
-                val targetTranslationY = (height - child.bottom).toFloat()
-                child.animate()
-                    .translationY(targetTranslationY)
-                    .setDuration(translationAnimationDuration)
-                    .setInterpolator(interpolator)
-            }
+        val translationYAnimation = if (indexOfChild(child) == 0) {
+            val currentTop = child.top
+            val targetTranslationY = -currentTop.toFloat()
+            child.animate()
+                .translationY(targetTranslationY)
+                .setDuration(translationAnimationDuration)
+                .setInterpolator(interpolator)
+        } else {
+            val targetTranslationY = (height - child.bottom).toFloat()
+            child.animate()
+                .translationY(targetTranslationY)
+                .setDuration(translationAnimationDuration)
+                .setInterpolator(interpolator)
         }
         alphaAnimation.start()
         translationYAnimation.start()
