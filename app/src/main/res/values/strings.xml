@@ -2,4 +2,11 @@
     <string name="app_name">android practicum custom view</string>
     <string name="xml_screen">XML View</string>
     <string name="compose_screen">Compose</string>
+    <string name="ill_ex">Добавлено больше двух дочерних View</string>
+    <string name="text_for_top_tv">TopTV</string>
+    <string name="text_for_bottom_tv">BottomTV</string>
+    <string name="alert_dia_title">Выберите количество дочерних View</string>
+    <string name="alert_dia_mess">Сколько дочерних View вы хотите отобразить?</string>
+    <string name="alert_dia_pos_btn">Одна дочерняя View</string>
+    <string name="alert_dia_neg_btn">Две дочерних View</string>
 </resources>

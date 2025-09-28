@@ -1,5 +1,6 @@
 package com.example.androidpracticumcustomview
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,13 +10,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val buttonXml = findViewById<Button>(R.id.xmlActivity)
-        val buttonCompose = findViewById<Button>(R.id.composeActivity)
-        buttonXml.setOnClickListener {
-            startActivity(Intent(this, XmlActivity::class.java))
+        findViewById<Button>(R.id.xmlActivity).setOnClickListener {
+            showViewCountDialog()
         }
-        buttonCompose.setOnClickListener {
+        findViewById<Button>(R.id.composeActivity).setOnClickListener {
             startActivity(Intent(this, ComposeScreen::class.java))
         }
+    }
+
+    private fun showViewCountDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.alert_dia_title)
+            .setMessage(R.string.alert_dia_mess)
+            .setPositiveButton(R.string.alert_dia_pos_btn) { _, _ ->
+                startActivity(XmlActivity.newIntent(this))
+            }
+            .setNegativeButton(R.string.alert_dia_neg_btn) { _, _ ->
+                startActivity(XmlActivity.newIntent(this, false))
+            }
+            .setCancelable(true)
+            .show()
     }
 }
